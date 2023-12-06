@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Day1.Model;
 
@@ -23,43 +22,56 @@ public class CalibrationValueProvider
         int result = 0;
         foreach (string rawCalibrationValue in rawCalibrationValues)
         {
-            string replacedRawCalibrationValue = ReplaceValues(rawCalibrationValue);
-            int value = ParseValue(replacedRawCalibrationValue);
-            Debug.WriteLine($"Raw {rawCalibrationValue}, replaced {replacedRawCalibrationValue} Value {value}" );
-            result += value;
+            string firstValue = GetFirstValue(rawCalibrationValue);
+            string lastValue = GetLastValue(rawCalibrationValue);
+            
+            result += int.Parse($"{firstValue}{lastValue}");
         }
 
         return result;
     }
 
-    private string ReplaceValues(string rawCalibrationValue)
+    private string GetFirstValue(string rawCalibrationValue)
     {
         string intermediateString = string.Empty;
         
         foreach (char c in rawCalibrationValue)
         {
             intermediateString += c;
-            foreach (KeyValuePair<string, string> keyValuePair in _valuesToReplace)
-            {
-                intermediateString = intermediateString.Replace(keyValuePair.Key, keyValuePair.Value);
-            }
+            if (TryGetValue(intermediateString, out string value)) 
+                return value;
+        }
+
+        throw new InvalidOperationException($"Found no value in {rawCalibrationValue}");
+    }
+
+    private bool TryGetValue(string intermediateString, out string value)
+    {
+        value = string.Empty;
+        foreach (KeyValuePair<string, string> keyValuePair in _valuesToReplace)
+        {
+            intermediateString = intermediateString.Replace(keyValuePair.Key, keyValuePair.Value);
+        }
+            
+        MatchCollection matches = Regex.Matches(intermediateString, @"[0-9]");
+        if (!matches.Any())
+            return false;
+
+        value = matches.First().Value;
+        return true;
+    }
+
+    private string GetLastValue(string rawCalibrationValue)
+    {
+        string intermediateString = string.Empty;
+
+        for (int i = rawCalibrationValue.Length - 1; i >= 0; i--)
+        {
+            intermediateString = rawCalibrationValue[i] + intermediateString;
+            if (TryGetValue(intermediateString, out string value)) 
+                return value;
         }
         
-        return intermediateString;
+        throw new InvalidOperationException($"Found no value in {rawCalibrationValue}");
     }
-    
-    private int ParseValue(string input)
-    {
-        MatchCollection matches = Regex.Matches(input, @"[0-9]");
-        if (matches.Count == 0)
-            return 0;
-
-        string firstValue = matches.First().Value;
-        string lastValue = matches.Count == 1 ? firstValue : matches.Last().Value;
-        
-        int result = int.Parse($"{firstValue}{lastValue}");
-        return result;
-    }
-    
-    
 }
