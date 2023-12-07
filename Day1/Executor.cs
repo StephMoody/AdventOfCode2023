@@ -1,21 +1,22 @@
-﻿using Day1.Model;
+﻿using Common;
+using Day1.Model;
 
 namespace Day1;
 
 public class Executor
 {
-    private readonly CalibrationInputReader _calibrationInputReader;
+    private readonly PuzzleInputReader _puzzleInputReader;
     private readonly CalibrationValueProvider _calibrationValueProvider;
     
-    public Executor(CalibrationInputReader calibrationInputReader, CalibrationValueProvider calibrationValueProvider)
+    public Executor(PuzzleInputReader puzzleInputReader, CalibrationValueProvider calibrationValueProvider)
     {
-        _calibrationInputReader = calibrationInputReader;
+        _puzzleInputReader = puzzleInputReader;
         _calibrationValueProvider = calibrationValueProvider;
     }
 
     public void Execute()
     {
-        string[] rawCalibrationValues = _calibrationInputReader.Read();
+        string[] rawCalibrationValues = _puzzleInputReader.Read();
         int sum = _calibrationValueProvider.Process(rawCalibrationValues);
         Console.WriteLine($"The result is {sum}");
     }

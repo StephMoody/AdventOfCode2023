@@ -12,10 +12,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="CalibrationValue.txt" />
+      <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Common\Common.csproj" />
+      <None Remove="PuzzleInput.txt" />
+      <Content Include="PuzzleInput.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
+
 </Project>

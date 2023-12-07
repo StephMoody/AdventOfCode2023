@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
-using System.Resources;
 
-namespace Day1.Model;
+namespace Common;
 
-public class CalibrationInputReader
+public class PuzzleInputReader
 {
     public string[] Read()
     {
@@ -13,7 +12,7 @@ public class CalibrationInputReader
         {
             return new string[]{};
         }
-        string pathToFile = Path.Combine(directoryName,  "CalibrationValue.txt");
+        string pathToFile = Path.Combine(directoryName,  "PuzzleInput.txt");
         return File.ReadAllLines(pathToFile);
     }
 }
